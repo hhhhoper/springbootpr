@@ -15,4 +15,11 @@ public class JwtUtil {
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, SECRET)
                 .compact();
 }
+public static String getUsernameFromToken(String token) {
+    return Jwts.parser()
+            .setSigningKey(SECRET)
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+}
 }

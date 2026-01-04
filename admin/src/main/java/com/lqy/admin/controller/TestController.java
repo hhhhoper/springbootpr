@@ -20,5 +20,11 @@ public class TestController {
     public Result<?> error() {
         throw new BusinessException(400, "测试异常");
     }
+
+    @GetMapping("/info")
+    public Result<String> info() {
+        return Result.success("需要登录后访问的资源");
+    }
+    
 }
 

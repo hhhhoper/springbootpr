@@ -10,5 +10,6 @@ public interface SysUserMapper extends BaseMapper<SysUser>
 {    
     @Select("SELECT * FROM sys_user WHERE username = #{username}")
     SysUser selectByUsername(String username);
+    
 
 }

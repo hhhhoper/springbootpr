@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +21,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private SysUserService systUserService;
+
+    @PostMapping("/regist")
+    public Result<?> regist(@RequestBody Map<String,String> registData) {
+        //TODO: process POST request
+        String username=registData.get("name");
+        String password=registData.get("password"); 
+        SysUser user=systUserService.registerUser(username, password);
+        return Result.success(user);
+    }
+    
 
     @PostMapping("/login")
     public Result<?> login(@RequestBody Map<String,String> loginData) {
@@ -38,7 +50,7 @@ public class AuthController {
         }
         
         //验证密码简单明文后面加密
-        if(!user.getPassword().equals(password)){
+        if(!passwordEncoder.matches(password, user.getPassword())){
             throw new BusinessException(400,"密码错误");
         }
         String token=JwtUtil.generateToken(username);
